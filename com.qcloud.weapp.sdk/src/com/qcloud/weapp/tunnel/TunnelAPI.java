@@ -22,7 +22,7 @@ class TunnelAPI {
 		try {
 			data = new JSONObject();
 			data.put("receiveUrl", receiveUrl);
-			data.put("protocolType", "wss");
+			data.put("protocolType", "ws");
 		} catch (JSONException e) {
 			// impossible
 		}

@@ -1,1 +1,5 @@
 build
+.idea/**
+*.iml
+com.qcloud.weapp.demo/target/
+com.qcloud.weapp.sdk/target/

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.epam</groupId>
+    <artifactId>qcloud-weapp-parent</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <repositories>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>${nexus.server}</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>${release.server.id}</id>
+            <name>Nexus Release Repository</name>
+            <url>${nexus.distrubite.release.url}/</url>
+        </repository>
+        <snapshotRepository>
+            <id>${snapshots.server.id}</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>${nexus.distrubite.snapshot.url}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <modules>
+        <!-- infrastructure -->
+        <module>com.qcloud.weapp.demo</module>
+        <module>com.qcloud.weapp.sdk</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <fastjson.version>1.2.23</fastjson.version>
+        <httpasyncclinet>4.1</httpasyncclinet>
+        <jhipster.server.version>1.1.1</jhipster.server.version>
+        <com.taobao.metamorphosis>1.4.6.2</com.taobao.metamorphosis>
+        <commons.io.version>2.4</commons.io.version>
+        <redis.clients.jedis.version>2.6.2</redis.clients.jedis.version>
+        <http.async.client.version>4.1</http.async.client.version>
+        <guava.version>18.0</guava.version>
+        <commons.lang.version>2.6</commons.lang.version>
+        <spring.kafka.version>1.1.2.RELEASE</spring.kafka.version>
+        <wechat.sdk.version>[1.2.1-RELEASE,1.2.99-RELEASE]</wechat.sdk.version>
+        <spring-integration-kafka.version>2.1.0.RELEASE</spring-integration-kafka.version>
+        <prometheus-simpleclient.version>0.0.20</prometheus-simpleclient.version>
+        <graphite.version>3.1.3</graphite.version>
+        <logstash-logback-encoder.version>4.8</logstash-logback-encoder.version>
+        <metrics-spring.version>3.1.3</metrics-spring.version>
+        <HikariCP.version>2.6.0</HikariCP.version>
+        <dropwizard-metrics.version>3.1.3</dropwizard-metrics.version>
+        <cache.version>1.0.0</cache.version>
+        <!--host config-->
+        <docker.host>http://wechat1.dextrys.com:4243</docker.host>
+        <docker.registry>wechat1.dextrys.com:5000</docker.registry>
+        <current.phase>none</current.phase>
+        <release.server.id>center-dextrys</release.server.id>
+        <snapshots.server.id>snapshots-dextrys</snapshots.server.id>
+        <nexus.server>http://wechat1.dextrys.com:8081/content/groups/public</nexus.server>
+        <nexus.distrubite.release.url>http://wechat1.dextrys.com:8081/content/repositories/releases
+        </nexus.distrubite.release.url>
+        <nexus.distrubite.snapshot.url>http://wechat1.dextrys.com:8081/content/repositories/snapshots
+        </nexus.distrubite.snapshot.url>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

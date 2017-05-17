@@ -1,35 +1,33 @@
 package com.qcloud.weapp.tunnel;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.qcloud.weapp.ConfigurationException;
 import com.qcloud.weapp.ConfigurationManager;
 import com.qcloud.weapp.Hash;
 import com.qcloud.weapp.authorization.LoginService;
 import com.qcloud.weapp.authorization.LoginServiceException;
 import com.qcloud.weapp.authorization.UserInfo;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 
 /**
  * 提供信道服务
- * */
+ */
 public class TunnelService {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 
 	/**
 	 * 从 Servlet Request 和 Servlet Response 实例化一个信道服务
-	 * */
+	 */
 	public TunnelService(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
@@ -44,7 +42,7 @@ public class TunnelService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private JSONObject getJsonForError(Exception error, int errorCode) {
 		JSONObject json = new JSONObject();
 		try {
@@ -58,14 +56,15 @@ public class TunnelService {
 		}
 		return json;
 	}
-	
+
 	private JSONObject getJsonForError(Exception error) {
 		return getJsonForError(error, -1);
 	}
-	
+
 
 	/**
 	 * 处理 WebSocket 信道请求
+	 *
 	 * @param handler 指定信道处理器处理信道事件
 	 * @param options 指定信道服务的配置
 	 */
@@ -80,7 +79,7 @@ public class TunnelService {
 
 	/**
 	 * 处理 GET 请求
-	 * 
+	 * <p>
 	 * GET 请求表示客户端请求进行信道连接，此时会向 SDK 申请信道连接地址，并且返回给客户端
 	 * 如果配置指定了要求登陆，还会调用登陆服务来校验登陆态并获得用户信息
 	 */
@@ -120,9 +119,10 @@ public class TunnelService {
 	private String buildReceiveUrl() throws ConfigurationException {
 		URI tunnelServerUri = URI.create(ConfigurationManager.getCurrentConfiguration().getTunnelServerUrl());
 		String schema = tunnelServerUri.getScheme();
+		int port = tunnelServerUri.getPort();
 		String host = ConfigurationManager.getCurrentConfiguration().getServerHost();
 		String path = request.getRequestURI();
-		return schema + "://" + host + path;
+		return schema + "://" + host + ":" + 8080 + path;
 	}
 
 	private void handlePost(TunnelHandler handler, TunnelHandleOptions options) throws ConfigurationException {
@@ -132,7 +132,7 @@ public class TunnelService {
 		try {
 			BufferedReader requestReader = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
 			requestContent = "";
-			for (String line; (line = requestReader.readLine()) != null;) {
+			for (String line; (line = requestReader.readLine()) != null; ) {
 				requestContent += line;
 			}
 		} catch (IOException e) {
@@ -140,7 +140,7 @@ public class TunnelService {
 			writeJson(getJsonForError(e));
 			return;
 		}
-		
+
 		// 2. 读取报文内容成 JSON 并保存在 body 变量中
 		JSONObject body = null;
 		String data = null, signature = null;
@@ -159,7 +159,7 @@ public class TunnelService {
 			}
 			writeJson(errJson);
 		}
-		
+
 		// 3. 检查报文签名
 		String computedSignature = Hash.sha1(data + TunnelClient.getKey());
 		if (!computedSignature.equals(signature)) {
@@ -173,7 +173,7 @@ public class TunnelService {
 			writeJson(json);
 			return;
 		}
-		
+
 		// 4. 解析报文中携带的数据
 		JSONObject packet;
 		String tunnelId = null;
@@ -186,7 +186,7 @@ public class TunnelService {
 			if (packet.has("content")) {
 				packetContent = packet.getString("content");
 			}
-			
+
 			JSONObject response = new JSONObject();
 			response.put("code", 0);
 			response.put("message", "OK");
@@ -202,13 +202,12 @@ public class TunnelService {
 			writeJson(response);
 			e.printStackTrace();
 		}
-		
+
 		// 5. 交给客户处理实例处理报文
 		Tunnel tunnel = Tunnel.getById(tunnelId);
 		if (packetType.equals("connect")) {
 			handler.onTunnelConnect(tunnel);
-		}
-		else if (packetType.equals("message")) {
+		} else if (packetType.equals("message")) {
 			handler.onTunnelMessage(tunnel, new TunnelMessage(packetContent));
 		} else if (packetType.equals("close")) {
 			handler.onTunnelClose(tunnel);

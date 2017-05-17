@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.epam</groupId>
+        <artifactId>qcloud-weapp-parent</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+    <groupId>com.epam</groupId>
+    <artifactId>weapp-sdk</artifactId><!--short for WeChat Platform-->
+    <packaging>jar</packaging>
+
+    <properties>
+        <servlet.version>3.1.0</servlet.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Sonatype Nexus Release</name>
+            <url>${nexus.server}</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>snapshot</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>${nexus.distrubite.snapshot.url}</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <url>${nexus.server}</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>snapshots</id>
+            <url>${nexus.distrubite.snapshot.url}</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160810</version>
+        </dependency>
+        <!--servlet-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src/</sourceDirectory>
+    </build>
+    <profiles>
+        <profile>
+            <id>epam</id>
+            <properties>
+                <release.server.id>center</release.server.id>
+                <snapshots.server.id>snapshots</snapshots.server.id>
+                <nexus.server>https://artifactory.epam.com/artifactory/repos</nexus.server>
+                <nexus.distrubite.release.url>https://artifactory.epam.com/artifactory/libs-release-local
+                </nexus.distrubite.release.url>
+                <nexus.distrubite.snapshot.url>https://artifactory.epam.com/artifactory/libs-snapshots-local
+                </nexus.distrubite.snapshot.url>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>dextrys</id>
+            <properties>
+                <release.server.id>center-dextrys</release.server.id>
+                <snapshots.server.id>snapshots-dextrys</snapshots.server.id>
+                <nexus.server>http://wechat1.dextrys.com:8081/content/groups/public</nexus.server>
+                <nexus.distrubite.release.url>http://wechat1.dextrys.com:8081/content/repositories/releases
+                </nexus.distrubite.release.url>
+                <nexus.distrubite.snapshot.url>http://wechat1.dextrys.com:8081/content/repositories/snapshots
+                </nexus.distrubite.snapshot.url>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+</project>

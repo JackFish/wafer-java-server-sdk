@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- status=debug 可以查看log4j的装配过程 -->
+<configuration status="debug" monitorInterval="1800">
+    <properties>
+        <!-- WebSite使用如下日志根目录-->
+        <property name="LOG_HOME">${log.home}</property>
+        <property name="BACKUP_HOME">{LOG_HOME}/backup</property>
+        <property name="SERVER_NAME">weapp</property>
+        <property name="APP_NAME">weapp</property>
+        <Property name="filename">${LOG_HOME}/${SERVER_NAME}/${APP_NAME}-all</Property>
+        <Property name="pattern">%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread] - %msg%n</Property>
+        <Property name="debug-pattern">%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n</Property>
+    </properties>
+    <appenders>
+        <!-- 定义控制台输出 -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${debug-pattern}"/>
+        </Console>
+        <!-- file log -->
+        <RollingRandomAccessFile name="file" fileName="${filename}.log"
+                                 filePattern="${filename}%d{yyyy-MM-dd}-%i.debug.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="200 MB"/>
+                <DefaultRolloverStrategy max="200"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </appenders>
+    <loggers>
+        <logger name="com.qcloud.weapp" level="debug"/>
+        <!-- dev Root Logger -->
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="file"/>
+        </Root>
+    </loggers>
+</configuration>
