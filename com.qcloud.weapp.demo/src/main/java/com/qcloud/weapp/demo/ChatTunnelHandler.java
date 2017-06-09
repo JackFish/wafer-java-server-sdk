@@ -145,4 +145,9 @@ public class ChatTunnelHandler implements TunnelHandler {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public UserInfo getUserInfoByTunnel(Tunnel tunnel){
+		return userMap.get(tunnel.getTunnelId());
+	}
 }

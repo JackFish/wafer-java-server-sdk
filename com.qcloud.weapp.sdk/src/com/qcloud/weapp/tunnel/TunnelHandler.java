@@ -38,4 +38,6 @@ public interface TunnelHandler {
 	 * @param tunnel 已经关闭的信道
 	 * */
 	void onTunnelClose(Tunnel tunnel);
+
+	UserInfo getUserInfoByTunnel(Tunnel tunnel);
 }

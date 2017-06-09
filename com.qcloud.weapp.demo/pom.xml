@@ -210,7 +210,7 @@
                 <version>2.2</version>
                 <configuration>
                     <path>/${project.artifactId}</path>
-                    <port>8080</port>
+                    <port>8081</port>
                     <uriEncoding>UTF-8</uriEncoding>
                     <server>tomcat7</server>
                     <warSourceDirectory>WebContent</warSourceDirectory>

@@ -122,7 +122,7 @@ public class TunnelService {
 		int port = tunnelServerUri.getPort();
 		String host = ConfigurationManager.getCurrentConfiguration().getServerHost();
 		String path = request.getRequestURI();
-		return schema + "://" + host + ":" + 8080 + path;
+		return schema + "://" + host + ":" + request.getLocalPort() + path;
 	}
 
 	private void handlePost(TunnelHandler handler, TunnelHandleOptions options) throws ConfigurationException {
@@ -186,11 +186,6 @@ public class TunnelService {
 			if (packet.has("content")) {
 				packetContent = packet.getString("content");
 			}
-
-			JSONObject response = new JSONObject();
-			response.put("code", 0);
-			response.put("message", "OK");
-			writeJson(response);
 		} catch (JSONException e) {
 			JSONObject response = new JSONObject();
 			try {
@@ -206,12 +201,25 @@ public class TunnelService {
 		// 5. 交给客户处理实例处理报文
 		Tunnel tunnel = Tunnel.getById(tunnelId);
 		if (packetType.equals("connect")) {
+			responseOK();
 			handler.onTunnelConnect(tunnel);
 		} else if (packetType.equals("message")) {
+			responseOK();
 			handler.onTunnelMessage(tunnel, new TunnelMessage(packetContent));
 		} else if (packetType.equals("close")) {
+			responseOK();
 			handler.onTunnelClose(tunnel);
+		}else if (packetType.equals("user")) {
+			UserInfo userInfo=handler.getUserInfoByTunnel(tunnel);
+			writeJson(new JSONObject(userInfo));
 		}
+	}
+
+	private void responseOK(){
+		JSONObject response = new JSONObject();
+		response.put("code", 0);
+		response.put("message", "OK");
+		writeJson(response);
 	}
 
 }

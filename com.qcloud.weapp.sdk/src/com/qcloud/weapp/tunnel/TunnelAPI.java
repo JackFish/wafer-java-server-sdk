@@ -27,7 +27,7 @@ class TunnelAPI {
 			// impossible
 		}
 
-		JSONObject result = request("/get/wsurl", data, true);
+		JSONObject result = request("get/wsurl", data, true);
 		Tunnel tunnel = new Tunnel(result.getString("tunnelId"));
 		tunnel.setConnectUrl(result.getString("connectUrl"));
 
